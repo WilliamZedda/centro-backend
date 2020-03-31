@@ -1,0 +1,126 @@
+<?style src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"?>
+<?script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"?>
+<?script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"?>
+<?script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"?>
+
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<zk>
+	<window title="Home Page - Alerts page" border="normal"
+		sclass="text-center" 
+		apply="com.tecnositaf.centrobackend.composer.ZKComposer">
+		<!-- height="100vh" -->
+		<div sclass="container-fluid row" height="100%">
+			<div sclass="col-8">
+				<gmaps id="mymap" height="100%" lat="50.4400"
+					lng="100.1234" zoom="8">
+				</gmaps>
+				<script type="text/javascript"
+					content="zk.googleAPIkey='AIzaSyAUnuPXweOavCoI5FlyO5z4UXf_6y74Zfg';" />
+			</div>
+			<div sclass="col-4">
+				<div sclass="btn-group" width="100%">
+					<button id="addAlert"
+						sclass="btn btn-outline-success" iconSclass="z-icon-plus"
+						width="50%">
+					</button>
+					<button sclass="btn btn-outline-info" label="Reload"
+						width="50%">
+					</button>
+					<!-- sync-alt non funziona come icona. uso temporaneo di
+						label
+						z-icon-sync-alt -->
+				</div>
+				<div>
+					<div width="100%">
+						<!-- onChanging = onChange + instant="true" -->
+						<!-- <span sclass="z-icon-filter" />  da rimuovere-->
+						<textbox
+							onChanging="@command('filterList',filter=event.value)"
+							placeholder="Search by" />
+					</div>
+					<listbox id="alertListbox"
+						emptyMessage="No alert found" mold="paging" pageSize="3"
+						sclass="list-group-horizontal"
+						style="display:flex; flex-wrap:wrap;">
+						<template name="model">
+							<listitem sclass="list-group-item" style="padding:0; width:100%;">
+								<listcell>
+									<div>
+										<zk
+											switch="${each.description}">
+											<zk case="incendio">
+												<div
+													sclass="alert alert-danger row">
+													<div
+														sclass="z-icon-fire col-md-auto align-self-center" />
+													<div sclass="col">
+														<label
+															multiline="true">
+															<attribute
+																name="value">
+																Date:
+																${each.timestamp}
+																Code:${each.code}
+																${each.description}
+															</attribute>
+														</label>
+													</div>
+												</div>
+											</zk>
+											<zk case="pioggia">
+												<div
+													sclass="alert alert-primary row">
+													<div
+														sclass="z-icon-cloud-showers-heavy col-md-auto align-self-center" />
+													<div sclass="col">
+														<label
+															multiline="true">
+															<attribute
+																name="value">
+																Date:
+																${each.timestamp}
+																Code:${each.code}
+																${each.description}
+															</attribute>
+														</label>
+													</div>
+												</div>
+											</zk>
+											<zk>
+												<div
+													sclass="alert alert-secondary row">
+													<div
+														sclass="z-icon-exclamation-triangle col-md-auto align-self-center" />
+													<div sclass="col">
+														<label
+															multiline="true">
+															<attribute
+																name="value">
+																Date:
+																${each.timestamp}
+																Code:${each.code}
+																${each.description}
+															</attribute>
+														</label>
+													</div>
+												</div>
+											</zk>
+										</zk>
+									</div>
+									<div>
+										<button
+											sclass="btn btn-outline-warning" iconSclass="z-icon-edit">
+										</button>
+										<button
+											sclass="btn btn-outline-danger" iconSclass="z-icon-trash">
+										</button>
+									</div>
+								</listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</div>
+			</div>
+		</div>
+	</window>
+</zk>
