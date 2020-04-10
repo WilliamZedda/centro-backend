@@ -1,0 +1,46 @@
+<?style src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"?>
+<?script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"?>
+<?script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"?>
+<?script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"?>
+
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<window apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('vm') @init('com.tecnositaf.centrobackend.controller.ZKDetailController')"
+	model="@load(vm.alert)">
+
+	<!-- manca il breadcrumb 
+		<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="#">Home</a></li>
+		<li class="breadcrumb-item active" aria-current="page">Alert</li>
+		</ol>
+		</nav>
+		
+	-->
+	<div sclass="card">
+		<label sclass="card-header" value="Alert" />
+		<div sclass="card-body">
+			<label value="ID ALERT:" />
+			<label value="@bind(vm.alert.idAlert)" />
+			<separator />
+			<label value="ID DEVICE:" />
+			<label value="@bind(vm.alert.idDeviceFk)" />
+			<separator />
+			<label value="TIMESTAMP:" />
+			<label value="@bind(vm.alert.timestamp)" />
+			<separator />
+			<label value="CODE:" />
+			<label value="@bind(vm.alert.code)" />
+			<separator />
+			<label value="DESCRIPTION:" />
+			<label value="@bind(vm.alert.description)" />
+			<separator />
+			<label value="STORAGE YEARS:" />
+			<label value="@bind(vm.alert.storageYears)" />
+		</div>
+		<div sclass="card-footer">
+			<button sclass="btn btn-ouline-primary"
+				iconSclass="z-icon-arrow-left" onClick="@command('goBack')" />
+		</div>
+	</div>
+</window>

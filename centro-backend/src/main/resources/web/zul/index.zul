@@ -6,51 +6,66 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk>
 	<window title="Home Page - Alerts page" border="normal"
-		sclass="text-center" 
+		sclass="text-center"
 		apply="com.tecnositaf.centrobackend.composer.ZKComposer">
-		<!-- height="100vh" -->
-		<div sclass="container-fluid row" height="100%">
-			<div sclass="col-8">
-				<gmaps id="mymap" height="100%" lat="50.4400"
-					lng="100.1234" zoom="8">
-				</gmaps>
+
+		<!--  height="100vh"
+			<window title="Home Page - Alerts page" border="normal"
+			height="100vh" sclass="text-center"
+			apply="org.zkoss.bind.BindComposer"
+			viewModel="@id('vm') @init('com.tecnositaf.centrobackend.controller.ZKIndexController')">
+			height="100%"
+		-->
+		<div sclass="container-fluid row">
+			<div sclass="col-8" height="100%">
+				<!-- <gmarker lat="@load(each.lat)" lng=@load(each.lng) content="@load(each.content)"/> 
+					AIzaSyA-RXX1nDCNEcelFvYewYA33wwBI-7-9lY'-->
 				<script type="text/javascript"
 					content="zk.googleAPIkey='AIzaSyAUnuPXweOavCoI5FlyO5z4UXf_6y74Zfg';" />
+				<gmaps id="gmaps" height="100%" showZoomCtrl="true"
+					zoom="8"/>
+
 			</div>
 			<div sclass="col-4">
 				<div sclass="btn-group" width="100%">
 					<button id="addAlert"
 						sclass="btn btn-outline-success" iconSclass="z-icon-plus"
 						width="50%">
+						<!-- href="~./zul/add_alert.zul" alternativa a sendRedirect() -->
 					</button>
-					<button sclass="btn btn-outline-info" label="Reload"
-						width="50%">
+					<button id="refresh" sclass="btn btn-outline-info"
+						label="Refresh" width="50%">
 					</button>
 					<!-- sync-alt non funziona come icona. uso temporaneo di
-						label
-						z-icon-sync-alt -->
+						label z-icon-sync-alt -->
 				</div>
-				<div>
-					<div width="100%">
-						<!-- onChanging = onChange + instant="true" -->
-						<!-- <span sclass="z-icon-filter" />  da rimuovere-->
-						<textbox
+				<div width="100%">
+					<div>
+						<!--
 							onChanging="@command('filterList',filter=event.value)"
-							placeholder="Search by" />
+							onChanging = onChange + instant="true" -->
+
+						<textbox id="search" placeholder="Search by"/>
+
+						<button label="Filter" id="searchBtn"/>
+
+						<!-- 				<textbox id="search2" onChangin="@command('filterList2')"/>-->
 					</div>
 					<listbox id="alertListbox"
-						emptyMessage="No alert found" mold="paging" pageSize="3"
+						emptyMessage="No alert found" mold="paging" pageSize="6"
 						sclass="list-group-horizontal"
 						style="display:flex; flex-wrap:wrap;">
 						<template name="model">
-							<listitem sclass="list-group-item" style="padding:0; width:100%;">
+							<listitem sclass="list-group-item"
+								value="${each}" style="padding:0; width:100%;">
 								<listcell>
 									<div>
 										<zk
 											switch="${each.description}">
 											<zk case="incendio">
 												<div
-													sclass="alert alert-danger row">
+													sclass="alert alert-danger row"
+													forward="onClick=alertListbox.onDetailClick">
 													<div
 														sclass="z-icon-fire col-md-auto align-self-center" />
 													<div sclass="col">
@@ -69,7 +84,8 @@
 											</zk>
 											<zk case="pioggia">
 												<div
-													sclass="alert alert-primary row">
+													sclass="alert alert-primary row"
+													forward="onClick=alertListbox.onDetailClick">
 													<div
 														sclass="z-icon-cloud-showers-heavy col-md-auto align-self-center" />
 													<div sclass="col">
@@ -88,7 +104,8 @@
 											</zk>
 											<zk>
 												<div
-													sclass="alert alert-secondary row">
+													sclass="alert alert-secondary row"
+													forward="onClick=alertListbox.onDetailClick">
 													<div
 														sclass="z-icon-exclamation-triangle col-md-auto align-self-center" />
 													<div sclass="col">
@@ -109,10 +126,12 @@
 									</div>
 									<div>
 										<button
-											sclass="btn btn-outline-warning" iconSclass="z-icon-edit">
+											sclass="btn btn-outline-warning" iconSclass="z-icon-edit"
+											forward="onClick=alertListbox.onUpdateClick">
 										</button>
 										<button
-											sclass="btn btn-outline-danger" iconSclass="z-icon-trash">
+											sclass="btn btn-outline-danger" iconSclass="z-icon-trash"
+											forward="onClick=alertListbox.onDeleteClick">
 										</button>
 									</div>
 								</listcell>
