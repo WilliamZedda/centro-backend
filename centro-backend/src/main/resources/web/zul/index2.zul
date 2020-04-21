@@ -1,0 +1,165 @@
+<?style src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"?>
+<?script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"?>
+<?script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"?>
+<?script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"?>
+
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<zk>
+	<window id="win" title="Home Page - Alerts page" border="normal"
+		sclass="text-center" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm')
+		@init('com.tecnositaf.centrobackend.controller.ZKIndexController')">
+		<!--
+			<script type="text/javascript">
+			var webSocket = new	WebSocket("ws://localhost:8080/centro-backend/zk/?dtid="+zk.$('$win').desktop.uuid);
+			</script>
+		-->
+		<div sclass="container-fluid row">
+			<div sclass="col-8">
+				<script type="text/javascript"
+					content="zk.googleAPIkey='AIzaSyAUnuPXweOavCoI5FlyO5z4UXf_6y74Zfg';" />
+				<gmaps id="gmaps" height="100%" showZoomCtrl="true"
+					zoom="8" lat="@load(vm.lat)" lng="@load(vm.lng)">
+
+					<gmarker iconImage="@load(vm.marker1.iconImage)"
+						open="@load(vm.marker1.open)" lat="@load(vm.marker1.lat)"
+						lng="@load(vm.marker1.lng)" content="@load(vm.marker1.content)" />
+					<attribute name="onMapClick">
+					<![CDATA[
+	org.zkoss.gmaps.Gmarker gmarker = event.getGmarker();
+	if (gmarker.isOpen()) {
+		gmarker.setOpen(false);
+	} else {
+		gmarker.setOpen(true);
+	}
+]]>
+</attribute>
+					<gmarker id="marker2" lat="@load(vm.marker2.lat)"
+						lng="@load(vm.marker2.lng)"
+						iconImage="@load(vm.marker2.iconImage)"
+						open="@load(vm.marker2.open)" content="@load(vm.marker2.content)" />
+					<attribute name="onMapClick"><![CDATA[
+	org.zkoss.gmaps.Gmarker gmarker = event.getGmarker();
+	if (gmarker.isOpen()) {
+		gmarker.setOpen(false);
+	} else {
+		gmarker.setOpen(true);
+	}
+]]></attribute>
+					<gmarker id="marker3" lat="@load(vm.marker3.lat)"
+						lng="@load(vm.marker3.lng)"
+						iconImage="@load(vm.marker3.iconImage)"
+						open="@load(vm.marker3.open)" content="@load(vm.marker3.content)" />
+					<attribute name="onMapClick"><![CDATA[
+	org.zkoss.gmaps.Gmarker gmarker = event.getGmarker();
+	if (gmarker.isOpen()) {
+		gmarker.setOpen(false);
+	} else {
+		gmarker.setOpen(true);
+	}
+]]></attribute>
+				</gmaps>
+			</div>
+			<div sclass="col-4">
+				<div sclass="btn-group" width="100%">
+					<button id="addAlert"
+						sclass="btn btn-outline-success" iconSclass="z-icon-plus"
+						width="50%" onClick="@command('addAlert')" />
+					<button id="refresh" sclass="btn btn-outline-info"
+						iconSclass="z-icon-retweet" width="50%"
+						onClick="@command('getAlerts')" />
+					<!-- Alcune icone non funzionano -->
+				</div>
+				<textbox width="100%" placeholder="Search by"
+					onChanging="@command('filterList',filter=event.value)" />
+				<listbox id="alertListbox" emptyMessage="No alert found"
+					mold="paging" pageSize="3" sclass="list-group-horizontal"
+					model="@bind(vm.alertList)" width="100%"
+					style="display:flex; flex-wrap:wrap;">
+					<template name="model">
+						<listitem sclass="list-group-item" width="100%"
+							height="100%">
+							<listcell>
+								<div width="100%" height="100%">
+									<zk switch="${each.description}">
+										<zk case="incendio">
+											<div width="100%"
+												height="100%" sclass="alert alert-danger row"
+												onClick="@command('goToDetail',alert=each)">
+												<div
+													sclass="z-icon-fire col-md-auto align-self-center" />
+												<div sclass="col">
+
+													Date:
+													<label
+														value="@bind(each.timestamp) @converter('formatedDate',format='yyyy/MM/dd')" />
+													<separator />
+													Code:
+													<label
+														value="@bind(each.code)" />
+													<separator />
+													<label
+														value="@bind(each.description)" />
+												</div>
+											</div>
+										</zk>
+										<zk case="pioggia">
+											<div width="100%"
+												height="100%" sclass="alert alert-primary row"
+												onClick="@command('goToDetail')">
+												<div
+													sclass="z-icon-tint col-md-auto align-self-center" />
+												<div sclass="col">
+													Date:
+													<label
+														value="@bind(each.timestamp) @converter('formatedDate',format='yyyy/MM/dd')" />
+													<separator />
+													Code:
+													<label
+														value="@bind(each.code)" />
+													<separator />
+													<label
+														value="@bind(each.description)" />
+												</div>
+											</div>
+										</zk>
+										<zk>
+											<div width="100%"
+												height="100%" sclass="alert alert-secondary row"
+												onClick="@command('goToDetail')">
+												<div
+													sclass="z-icon-exclamation-triangle col-md-auto align-self-center" />
+												<div sclass="col">
+													Date:
+													<label
+														value="@bind(each.timestamp) @converter('formatedDate',format='yyyy/MM/dd')" />
+													<separator />
+													Code:
+													<label
+														value="@bind(each.code)" />
+													<separator />
+													<label
+														value="@bind(each.description)" />
+												</div>
+											</div>
+										</zk>
+									</zk>
+								</div>
+								<div>
+									<button
+										sclass="btn btn-outline-warning" iconSclass="z-icon-edit"
+										onClick="@command('updateAlert',alert=each)">
+									</button>
+									<button
+										sclass="btn btn-outline-danger" iconSclass="z-icon-trash"
+										onClick="@command('deleteAlert',alert=each)">
+									</button>
+								</div>
+							</listcell>
+						</listitem>
+					</template>
+				</listbox>
+			</div>
+		</div>
+	</window>
+</zk>

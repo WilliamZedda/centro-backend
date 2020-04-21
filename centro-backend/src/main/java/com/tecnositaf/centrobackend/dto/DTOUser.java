@@ -1,11 +1,10 @@
-package com.tecnositaf.centrobackend.model;
+package com.tecnositaf.centrobackend.dto;
 
 import org.springframework.beans.BeanUtils;
 
-import com.tecnositaf.centrobackend.dto.DTOUser;
+import com.tecnositaf.centrobackend.model.User;
 
-public class User {
-
+public class DTOUser {
 	private Integer idUser;
 	private String username;
 	private String email;
@@ -48,8 +47,8 @@ public class User {
 		this.idUser = idUser;
 	}
 
-	public DTOUser toDTOUser() {
-		DTOUser output = new DTOUser();
+	public User toUser() {
+		User output = new User();
 		BeanUtils.copyProperties(this, output);
 		return output;
 	}

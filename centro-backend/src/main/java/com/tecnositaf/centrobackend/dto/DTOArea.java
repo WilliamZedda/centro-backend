@@ -1,9 +1,9 @@
-package com.tecnositaf.centrobackend.model;
+package com.tecnositaf.centrobackend.dto;
 
 import org.springframework.beans.BeanUtils;
-import com.tecnositaf.centrobackend.dto.DTOArea;
+import com.tecnositaf.centrobackend.model.Area;
 
-public class Area {
+public class DTOArea {
 	private Integer id;
 	private String name;
 	private String countryCode;
@@ -58,9 +58,8 @@ public class Area {
 	public void setParentArea(String parentArea) {
 		this.parentArea = parentArea;
 	}
-	
-	public DTOArea toDTOArea() {
-		DTOArea output = new DTOArea();
+	public Area toArea() {
+		Area output = new Area();
 		BeanUtils.copyProperties(this, output);
 		return output;
 	}
