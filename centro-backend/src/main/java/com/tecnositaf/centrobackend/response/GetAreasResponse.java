@@ -5,7 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.tecnositaf.centrobackend.model.Area;
+import com.tecnositaf.centrobackend.dto.DTOArea;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "count", "filter", "areas" })
@@ -15,15 +15,15 @@ public class GetAreasResponse {
 	@JsonProperty("filters")
 	private Object filter;
 	@JsonProperty("areas")
-	private List<Area> areas;
+	private List<DTOArea> areas;
 
 	@JsonProperty("areas")
-	public List<Area> getAreas() {
+	public List<DTOArea> getAreas() {
 		return areas;
 	}
 
 	@JsonProperty("areas")
-	public void setAreas(List<Area> areas) {
+	public void setAreas(List<DTOArea> areas) {
 		this.areas = areas;
 	}
 

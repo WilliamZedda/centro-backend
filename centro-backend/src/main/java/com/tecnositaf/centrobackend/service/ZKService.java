@@ -15,12 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.zkoss.zul.ListModelList;
 
-import com.tecnositaf.centrobackend.DTO.AlertDTO;
+import com.tecnositaf.centrobackend.dto.DTOAlert;
 import com.tecnositaf.centrobackend.enumeration.Errors;
 import com.tecnositaf.centrobackend.exception.FailureException;
 import com.tecnositaf.centrobackend.model.Alert;
 import com.tecnositaf.centrobackend.repository.AlertRepository;
-import com.tecnositaf.centrobackend.utilities.Common;
 
 @Service("zkService")
 @Scope(value = "singleton", proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -39,21 +38,21 @@ public class ZKService {
 	public List<Alert> findAll() {
 		log.info("ZKService: findAll");
 		List<Alert> alertList = alertRepository.findAll();
-		alertList.forEach(alert -> alert.setStorageYears(Common.calculateStorageYears(alert.getTimestamp())));
+		//alertList.forEach(alert -> alert.setStorageYears(Common.calculateStorageYears(alert.getTimestamp())));
 		return alertList;
 	}
 
-	public List<AlertDTO> findAllDTO() {
+	public List<DTOAlert> findAllDTO() {
 		log.info("ZKService: findAllDTO");
 		List<Alert> alertList = alertRepository.findAll();
-		List<AlertDTO> alertListDTO = new ArrayList<>();
+		List<DTOAlert> alertListDTO = new ArrayList<>();
 		for (Alert alert : alertList) {
-			AlertDTO el = new AlertDTO();
+			DTOAlert el = new DTOAlert();
 			el.setIdAlert(alert.getIdAlert());
 			el.setIdDeviceFk(alert.getIdDeviceFk());
 			el.setCode(alert.getCode());
 			el.setDescription(alert.getDescription());
-			el.setStorageYears(alert.getStorageYears());
+			//el.setStorageYears(alert.getStorageYears());
 			el.setTimestamp(Date.from(alert.getTimestamp().atZone(ZoneId.systemDefault()).toInstant()));
 			alertListDTO.add(el);
 		}
@@ -77,22 +76,22 @@ public class ZKService {
 		return new ListModelList<>(filteredList);
 	}
 
-	public List<AlertDTO> filterList(String filter) {
+	public List<DTOAlert> filterList(String filter) {
 		log.info("ZKService: filterList");
 		List<Alert> list = alertRepository.findAll();
-		List<AlertDTO> filteredList = new ArrayList<>();
+		List<DTOAlert> filteredList = new ArrayList<>();
 		for (Alert alert : list) {
 			if (alert.getDescription().toLowerCase().contains(filter.toLowerCase())
 //					||
 //					alert.getIdAlert().contains(filter) ||
 //					alert.getIdDeviceFk().contains(filter)
 			) {
-				AlertDTO el = new AlertDTO();
+				DTOAlert el = new DTOAlert();
 				el.setIdAlert(alert.getIdAlert());
 				el.setIdDeviceFk(alert.getIdDeviceFk());
 				el.setCode(alert.getCode());
 				el.setDescription(alert.getDescription());
-				el.setStorageYears(alert.getStorageYears());
+				//el.setStorageYears(alert.getStorageYears());
 				el.setTimestamp(Date.from(alert.getTimestamp().atZone(ZoneId.systemDefault()).toInstant()));
 				filteredList.add(el);
 			}
@@ -141,7 +140,7 @@ public class ZKService {
 		if (!this.existById(idAlert))
 			throw new FailureException(Errors.RESULT_NOT_FOUND, HttpStatus.NOT_FOUND);
 		Alert alert = this.findByIdNoOptional(idAlert);
-		alert.setStorageYears(Common.calculateStorageYears(alert.getTimestamp()));
+		//alert.setStorageYears(Common.calculateStorageYears(alert.getTimestamp()));
 		return alert;
 	}
 

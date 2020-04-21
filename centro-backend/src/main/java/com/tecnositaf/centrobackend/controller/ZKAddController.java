@@ -10,19 +10,19 @@ import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 
-import com.tecnositaf.centrobackend.DTO.AlertDTO;
+import com.tecnositaf.centrobackend.dto.DTOAlert;
 import com.tecnositaf.centrobackend.model.Alert;
 import com.tecnositaf.centrobackend.service.ZKService;
 
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
 public class ZKAddController {
 	
-	private AlertDTO alert =new AlertDTO();
+	private DTOAlert alert =new DTOAlert();
 	
-	public void setAlert(AlertDTO alert) {
+	public void setAlert(DTOAlert alert) {
 		this.alert = alert;
 	}
-	public AlertDTO getAlert() {
+	public DTOAlert getAlert() {
 		return this.alert;
 	}
 

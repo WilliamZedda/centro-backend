@@ -5,30 +5,62 @@
 
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk>
-
-	<window title="Home Page - Alerts page" border="normal"
+	<window id="win" title="Home Page - Alerts page" border="normal"
 		sclass="text-center" apply="org.zkoss.bind.BindComposer"
-		viewModel="@id('vm') @init('com.tecnositaf.centrobackend.controller.ZKIndexController')">
+		viewModel="@id('vm')
+		@init('com.tecnositaf.centrobackend.controller.ZKIndexController')">
+		<!--
+			<script type="text/javascript">
+			var webSocket = new	WebSocket("ws://localhost:8080/centro-backend/zk/?dtid="+zk.$('$win').desktop.uuid);
+			</script>
+		-->
 		<div sclass="container-fluid row">
 			<div sclass="col-8">
 				<script type="text/javascript"
 					content="zk.googleAPIkey='AIzaSyAUnuPXweOavCoI5FlyO5z4UXf_6y74Zfg';" />
 				<gmaps id="gmaps" height="100%" showZoomCtrl="true"
 					zoom="8" lat="@load(vm.lat)" lng="@load(vm.lng)">
+
 					<gmarker iconImage="@load(vm.marker1.iconImage)"
 						open="@load(vm.marker1.open)" lat="@load(vm.marker1.lat)"
 						lng="@load(vm.marker1.lng)" content="@load(vm.marker1.content)" />
-					<gmarker lat="@load(vm.marker2.lat)"
+					<attribute name="onMapClick">
+					<![CDATA[
+	org.zkoss.gmaps.Gmarker gmarker = event.getGmarker();
+	if (gmarker.isOpen()) {
+		gmarker.setOpen(false);
+	} else {
+		gmarker.setOpen(true);
+	}
+]]>
+</attribute>
+					<gmarker id="marker2" lat="@load(vm.marker2.lat)"
 						lng="@load(vm.marker2.lng)"
 						iconImage="@load(vm.marker2.iconImage)"
 						open="@load(vm.marker2.open)" content="@load(vm.marker2.content)" />
-					<gmarker lat="@load(vm.marker3.lat)"
+					<attribute name="onMapClick"><![CDATA[
+	org.zkoss.gmaps.Gmarker gmarker = event.getGmarker();
+	if (gmarker.isOpen()) {
+		gmarker.setOpen(false);
+	} else {
+		gmarker.setOpen(true);
+	}
+]]></attribute>
+					<gmarker id="marker3" lat="@load(vm.marker3.lat)"
 						lng="@load(vm.marker3.lng)"
 						iconImage="@load(vm.marker3.iconImage)"
 						open="@load(vm.marker3.open)" content="@load(vm.marker3.content)" />
+					<attribute name="onMapClick"><![CDATA[
+	org.zkoss.gmaps.Gmarker gmarker = event.getGmarker();
+	if (gmarker.isOpen()) {
+		gmarker.setOpen(false);
+	} else {
+		gmarker.setOpen(true);
+	}
+]]></attribute>
 				</gmaps>
 			</div>
-			<div sclass="col-4" height="100vh">
+			<div sclass="col-4">
 				<div sclass="btn-group" width="100%">
 					<button id="addAlert"
 						sclass="btn btn-outline-success" iconSclass="z-icon-plus"
@@ -47,7 +79,7 @@
 					<template name="model">
 						<listitem sclass="list-group-item" width="100%"
 							height="100%">
-							<listcell >
+							<listcell>
 								<div width="100%" height="100%">
 									<zk switch="${each.description}">
 										<zk case="incendio">

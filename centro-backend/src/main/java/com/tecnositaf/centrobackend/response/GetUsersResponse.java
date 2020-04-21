@@ -2,17 +2,17 @@ package com.tecnositaf.centrobackend.response;
 
 import java.util.List;
 
-import com.tecnositaf.centrobackend.model.User;
+import com.tecnositaf.centrobackend.dto.DTOUser;
 
 public class GetUsersResponse extends UserResponse {
 	private Integer numberOfUsers;
-	private List<User> users;
+	private List<DTOUser> users;
 
-	public List<User> getUsers() {
+	public List<DTOUser> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<User> users) {
+	public void setUsers(List<DTOUser> users) {
 		this.users = users;
 	}
 
@@ -24,7 +24,7 @@ public class GetUsersResponse extends UserResponse {
 		this.numberOfUsers = numberOfUsers;
 	}
 
-	public GetUsersResponse(int code, String message, String path, List<User> users, Integer numberOfUsers) {
+	public GetUsersResponse(int code, String message, String path, List<DTOUser> users, Integer numberOfUsers) {
 		super(code, message, path);
 		this.numberOfUsers = numberOfUsers;
 		this.users = users;

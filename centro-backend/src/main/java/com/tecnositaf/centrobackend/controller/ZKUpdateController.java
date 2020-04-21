@@ -14,7 +14,7 @@ import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 
-import com.tecnositaf.centrobackend.DTO.AlertDTO;
+import com.tecnositaf.centrobackend.dto.DTOAlert;
 import com.tecnositaf.centrobackend.model.Alert;
 import com.tecnositaf.centrobackend.service.ZKService;
 
@@ -22,7 +22,7 @@ import com.tecnositaf.centrobackend.service.ZKService;
 public class ZKUpdateController {
 
 	private Date timestamp;
-	private AlertDTO alert = new AlertDTO();
+	private DTOAlert alert = new DTOAlert();
 	
 	public void setTimestamp(Date timestamp) {
 		this.timestamp=timestamp;
@@ -31,11 +31,11 @@ public class ZKUpdateController {
 		return this.timestamp;
 	}
 
-	public AlertDTO getAlert() {
+	public DTOAlert getAlert() {
 		return alert;
 	}
 
-	public void setAlert(AlertDTO alert) {
+	public void setAlert(DTOAlert alert) {
 		this.alert = alert;
 	}
 
@@ -47,7 +47,7 @@ public class ZKUpdateController {
 	public void init() {
 		
 		Session session = Sessions.getCurrent();
-		AlertDTO alertSent = (AlertDTO) session.getAttribute("alert");
+		DTOAlert alertSent = (DTOAlert) session.getAttribute("alert");
 		this.getAlert().setIdAlert(alertSent.getIdAlert());
 		this.getAlert().setIdDeviceFk(alertSent.getIdDeviceFk());
 		this.getAlert().setCode(alertSent.getCode());

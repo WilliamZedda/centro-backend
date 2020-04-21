@@ -11,20 +11,20 @@ import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 
-import com.tecnositaf.centrobackend.DTO.AlertDTO;
+import com.tecnositaf.centrobackend.dto.DTOAlert;
 import com.tecnositaf.centrobackend.service.ZKService;
 
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
 @Controller
 public class ZKDetailController {
 
-	private AlertDTO alert = new AlertDTO();
+	private DTOAlert alert = new DTOAlert();
 
-	public AlertDTO getAlert() {
+	public DTOAlert getAlert() {
 		return alert;
 	}
 
-	public void setAlert(AlertDTO alert) {
+	public void setAlert(DTOAlert alert) {
 		this.alert = alert;
 	}
 
@@ -35,7 +35,7 @@ public class ZKDetailController {
 	@Init
 	public void init() {
 		Session session = Sessions.getCurrent();
-		AlertDTO alertSent = (AlertDTO) session.getAttribute("detail");
+		DTOAlert alertSent = (DTOAlert) session.getAttribute("detail");
 		this.getAlert().setIdAlert(alertSent.getIdAlert());
 		this.getAlert().setIdDeviceFk(alertSent.getIdDeviceFk());
 		this.getAlert().setCode(alertSent.getCode());
