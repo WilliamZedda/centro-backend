@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.tecnositaf.centrobackend.dto.DTOAlert;
 import com.tecnositaf.centrobackend.enumeration.Errors;
-import com.tecnositaf.centrobackend.model.Alert;
 import com.tecnositaf.centrobackend.response.Response;
 import com.tecnositaf.centrobackend.service.AlertService;
-import com.tecnositaf.centrobackend.utilities.Common;
+import com.tecnositaf.centrobackend.utilities.CheckUtilities;
 
 @RestController
 @RequestMapping("/websocket/alerts/response")
@@ -35,17 +35,16 @@ public class WebSocketController {
 	private AlertService alertService;
 
 	@PostMapping()
-	public ResponseEntity<Response> insertWithResponse(@RequestBody Alert alertToAdd) {
+	public ResponseEntity<Response> insertWithResponse(@RequestBody DTOAlert alert) {
 		log.info("addAlertByWebSocket");
-		if (!Common.isNull(alertToAdd.getIdAlert()) || Common.alertIsNotCompleteMinusIdAlertCheck(alertToAdd))
+		if (!CheckUtilities.checkDTOAlertInsert(alert))
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
 					new Response(-1, Errors.FAILURE, ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
 
-		alertService.insert(alertToAdd);
+		alertService.insert(alert.toAlert());
 
 		// List<Alert> alertList = alertService.findAll();
-		alertToAdd.setStorageYears(Common.calculateStorageYears(alertToAdd.getTimestamp()));
-		this.template.convertAndSend("/topic/alert", alertToAdd);
+		this.template.convertAndSend("/topic/alert", alert);
 
 		return ResponseEntity.status(HttpStatus.OK).body(null);
 		/*
@@ -55,12 +54,11 @@ public class WebSocketController {
 	}
 
 	@PostMapping("/no")
-	public void insertNoResponse(@RequestBody Alert alertToAdd) {
+	public void insertNoResponse(@RequestBody DTOAlert alert) {
 		log.info("addAlertByWebSocketNoResponse");
-		if (Common.isNull(alertToAdd.getIdAlert()) && Common.alertIsCompleteCheck(alertToAdd)) {
-			alertService.insert(alertToAdd);
-			alertToAdd.setStorageYears(Common.calculateStorageYears(alertToAdd.getTimestamp()));
-			this.template.convertAndSend("/topic/alert", alertToAdd);
+		if (CheckUtilities.checkDTOAlert(alert)) {
+			alertService.insert(alert.toAlert());
+			this.template.convertAndSend("/topic/alert", alert);
 		 }
 	}
 

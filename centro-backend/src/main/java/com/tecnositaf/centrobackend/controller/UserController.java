@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.tecnositaf.centrobackend.dto.DTOUser;
 import com.tecnositaf.centrobackend.enumeration.Errors;
-import com.tecnositaf.centrobackend.model.User;
 import com.tecnositaf.centrobackend.response.GetUserByIdResponse;
 import com.tecnositaf.centrobackend.response.GetUsersResponse;
 import com.tecnositaf.centrobackend.response.UserResponse;
 import com.tecnositaf.centrobackend.service.UserService;
-import com.tecnositaf.centrobackend.utilities.Common;
+import com.tecnositaf.centrobackend.utilities.CheckUtilities;
 
 @RestController
 @RequestMapping("/users")
@@ -31,11 +31,14 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	/*
+	 * GET
+	 */
 
 	@GetMapping
-	public ResponseEntity<UserResponse> getAllUsers() {
-		log.info("getAllUsers");
-		List<User> userList = userService.getAllUsers();
+	public ResponseEntity<UserResponse> getAll() {
+		log.info("getAll");
+		List<DTOUser> userList = userService.getAll();
 		return ResponseEntity.status(HttpStatus.OK).body(new GetUsersResponse(0, Errors.SUCCESS,
 				ServletUriComponentsBuilder.fromCurrentRequest().toUriString(), userList, userList.size()));
 	}
@@ -43,52 +46,57 @@ public class UserController {
 	@GetMapping("/{idUser}")
 	public ResponseEntity<UserResponse> getUserById(@PathVariable("idUser") Integer idUser) {
 		log.info("getUserById");
-		if (Common.isNull(idUser) || !Common.isInteger(idUser))
+		if (CheckUtilities.isNull(idUser))
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserResponse(-1, Errors.FAILURE,
 					ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
-
 		return ResponseEntity.status(HttpStatus.OK).body(new GetUserByIdResponse(0, Errors.SUCCESS,
 				ServletUriComponentsBuilder.fromCurrentRequest().toUriString(), userService.getUserById(idUser)));
-
 	}
 
+	/*
+	 * POST
+	 */
 	@PostMapping
-	public ResponseEntity<UserResponse> insertUser(@RequestBody User userToAdd) {
+	public ResponseEntity<UserResponse> insert(@RequestBody DTOUser user) {
 		log.info("insertUser");
-		if (!Common.isNull(userToAdd.getIdUser()) || Common.isNull(userToAdd) || Common.isNull(userToAdd.getEmail())
-				|| Common.isNull(userToAdd.getUsername()) || Common.isNull(userToAdd.getPassword()))
+		if (!CheckUtilities.isUserInsert(user))
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserResponse(-1, Errors.FAILURE,
 					ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
-
-		userService.insertUser(userToAdd);
-
-		List<User> userList = userService.getAllUsers();
+		
+		userService.insert(user.toUser());
+		
+		List<DTOUser> userList = userService.getAll();
 		return ResponseEntity.status(HttpStatus.OK).body(new GetUsersResponse(0, Errors.SUCCESS,
 				ServletUriComponentsBuilder.fromCurrentRequest().toUriString(), userList, userList.size()));
 	}
+	/*
+	 * PUT
+	 */
 
 	@PutMapping
-	public ResponseEntity<UserResponse> updateUser(@RequestBody User updateUser) {
+	public ResponseEntity<UserResponse> update(@RequestBody DTOUser user) {
 		log.info("updateAlert");
-		if (Common.isNull(updateUser) || Common.isNull(updateUser.getIdUser()) || Common.isNull(updateUser.getEmail())
-				|| Common.isNull(updateUser.getUsername()) || Common.isNull(updateUser.getPassword())
-				|| !Common.isInteger(updateUser.getIdUser()))
+		if (!CheckUtilities.isUserUpdate(user))
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserResponse(-1, Errors.FAILURE,
 					ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
 
-		userService.updateUser(updateUser);
-		List<User> userList = userService.getAllUsers();
+		userService.update(user.toUser());
+		
+		List<DTOUser> userList = userService.getAll();
 		return ResponseEntity.status(HttpStatus.OK).body(new GetUsersResponse(0, Errors.SUCCESS,
 				ServletUriComponentsBuilder.fromCurrentRequest().toUriString(), userList, userList.size()));
 	}
 
-	@DeleteMapping("{idUser}")
-	public ResponseEntity<UserResponse> deleteUser(@PathVariable("idUser") Integer idUser) {
-		if (Common.isNull(idUser) || !Common.isInteger(idUser))
-			return ResponseEntity.status(HttpStatus.OK).body(new UserResponse(-1, Errors.FAILURE,
+	/*
+	 * DELETE
+	 */
+	@DeleteMapping("/{idUser}")
+	public ResponseEntity<UserResponse> delete(@PathVariable("idUser") Integer idUser) {
+		if (CheckUtilities.isNull(idUser))
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserResponse(-1, Errors.FAILURE,
 					ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
-		userService.deleteUser(idUser);
-		List<User> userList = userService.getAllUsers();
+		userService.delete(idUser);
+		List<DTOUser> userList = userService.getAll();
 		return ResponseEntity.status(HttpStatus.OK).body(new GetUsersResponse(0, Errors.SUCCESS,
 				ServletUriComponentsBuilder.fromCurrentRequest().toUriString(), userList, userList.size()));
 	}

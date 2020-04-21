@@ -5,12 +5,17 @@
 
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <window apply="org.zkoss.bind.BindComposer"
-	viewModel="@id('vm') @init('com.tecnositaf.centrobackend.controller.ZKAddController')">
+	viewModel="@id('vm') @init('com.tecnositaf.centrobackend.controller.ZKUpdateController')">
 	<div form="@id('fx') @load(vm) @save(vm, before='submit')"
 		sclass="card">
-		<label value="Add Alert" sclass="card-header" />
+		<label sclass="card-header" value="Update Alert" />
 		<grid>
 			<rows>
+				<row>
+					<label value="ID ALERT" />
+					<textbox value="@bind(fx.alert.idAlert)"
+						readonly="true" />
+				</row>
 				<row>
 					<label value="ID DEVICE" />
 					<textbox value="@bind(fx.alert.idDeviceFk)"
@@ -19,16 +24,16 @@
 				<row>
 					<label value="TIMESTAMP" />
 					<cell colspan="2">
-						<datebox cols="12" format="long+medium"
+						<datebox id="db4" cols="12" format="long+medium"
 							value="@bind(fx.alert.timestamp)"
-							onCreate="self.value = new Date()"
 							constraint="no empty, no future" />
 					</cell>
 				</row>
 				<row>
 					<label value="CODE" />
-					<intbox value="@bind(fx.alert.code)"
-						constraint="no empty, no negative" />
+					<textbox value="@bind(fx.alert.code)"
+						constraint="no negative" />
+
 				</row>
 				<row>
 					<label value="DESCRIPTION" />
@@ -38,7 +43,8 @@
 				<row sclass="card-footer">
 					<button iconSclass="z-icon-arrow-left"
 						onClick="@command('goBack')" />
-					<button label="Submit" onClick="@command('submit')" />
+					<button iconSclass="z-icon-edit"
+						onClick="@command('submit')" />
 				</row>
 			</rows>
 		</grid>

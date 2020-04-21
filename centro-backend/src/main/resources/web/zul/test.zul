@@ -1,0 +1,21 @@
+<window id="win" apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('vm') @init('com.tecnositaf.centrobackend.ZKClient')">
+	<zscript>
+		// Create a new instance of the websocket var webSocket = new
+		WebSocket("ws://localhost:8080/zkwebsocket/echo/?dtid=" +
+		zk.$('$win').desktop.uuid);
+
+		// receive a message from websocket, and notify ZK application
+		to update the component data. webSocket.onmessage =
+		function(event) { zkbind.$('$win').command('update'); // the
+		update command has already declared in ZKWebSocketViewModel.java
+		};
+	</zscript>
+	<groupbox title="ZK">
+		<hlayout>
+			count:
+			<label value="@load(vm.count)" />
+		</hlayout>
+		<button label="add" onClick="@command('cmd')" />
+	</groupbox>
+</window>

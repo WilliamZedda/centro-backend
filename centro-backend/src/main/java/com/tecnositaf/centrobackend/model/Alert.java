@@ -2,11 +2,12 @@ package com.tecnositaf.centrobackend.model;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.tecnositaf.centrobackend.dto.DTOAlert;
+import com.tecnositaf.centrobackend.utilities.DateUtilities;
 
 @Document(collection = "alert")
 public class Alert {
@@ -18,8 +19,6 @@ public class Alert {
 	private LocalDateTime timestamp;
 	private Integer code;
 	private String description;
-	@Transient
-	private int storageYears;
 
 	public String getIdAlert() {
 		return idAlert;
@@ -61,11 +60,21 @@ public class Alert {
 		this.description = description;
 	}
 
-	public int getStorageYears() {
-		return storageYears;
+	@Override
+	public String toString() {
+		return "DTOAlert{" + "idAlert=" + idAlert + ", idDeviceFk='" + idDeviceFk + '\'' + ", description='"
+				+ description + '\'' + ", code=" + code + ", timestamp='" + timestamp + '}';
 	}
 
-	public void setStorageYears(int storageYears) {
-		this.storageYears = storageYears;
+	// XXX nuovo metodo che ho aggiunto al model per il passaggo al DTO
+	// corrispondente
+	public DTOAlert toDTOAlert() {
+		DTOAlert output = new DTOAlert(); // 'this' => User 'output' => DTOUser
+		BeanUtils.copyProperties(this, output);
+		// vengono settate in 'output' tutti campi che hanno lo stesso nome tra la
+		// classe User e DTOUser
+		output.setTimestamp(DateUtilities.convertLocalDateTimeToDate(this.getTimestamp()));
+		output.setStorageYears(DateUtilities.calculateStorageYears(this.getTimestamp()));
+		return output;
 	}
 }
